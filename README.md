@@ -1,2 +1,4 @@
 # django-book-lib
-This is a test repo
+
+#start
+docker-compose up

@@ -1,0 +1,30 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+       - ./postgres:/data/postgres
+    ports:
+       - "5432:5432"
+  pdadmin:
+    image: dpage/pgadmin4
+    volumes:
+       - ./pgadmin:/root/.pgadmin
+    ports:
+       - "5555:80"
+    environment:
+       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin}
+       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    depends_on:
+       - postgres
+
+  web:
+    build: ./book-inventory
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+       - ./book-inventory/book_service:/code
+    ports:
+       - "8000:8000"
+    depends_on:
+       - postgres
